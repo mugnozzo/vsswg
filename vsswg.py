@@ -3,6 +3,7 @@
 import os
 import shutil
 import re
+from configparser import ConfigParser # to parse config.ini
 
 page_vars = {}
 
@@ -41,8 +42,8 @@ def replace_blocks(original_file, blocks_dir):
         file.write(content)
 
 def process_directory(source_dir, dest_dir, blocks_dir):
-    for root, dirs, files in os.walk(source_dir):
-        relative_path = os.path.relpath(root, source_dir)
+    for root, dirs, files in os.walk(source_dir+'/pages'):
+        relative_path = os.path.relpath(root, source_dir+'/pages')
         new_dir = os.path.join(dest_dir, relative_path)
 
         if not os.path.exists(new_dir):
@@ -56,9 +57,19 @@ def process_directory(source_dir, dest_dir, blocks_dir):
 
 
 def main():
-    source_directory = 'pages'
-    destination_directory = '..'
-    blocks_directory = 'blocks'
+    path=os.path.dirname(os.path.realpath(__file__))
+    confPath=path+"/config.ini"
+    config=None
+    if os.path.exists(confPath):
+        config=ConfigParser()
+        config.read(confPath)
+    else:
+        raise Exception("File config.ini not found in directory "+path+". Did you copy/move config.def.ini to config.ini?")
+
+    paths = config['Paths']
+    source_directory = paths['source_directory']
+    destination_directory = paths['destination_directory']
+    blocks_directory = source_directory+'/blocks'
 
     # Process the directory
     process_directory(source_directory, destination_directory, blocks_directory)
