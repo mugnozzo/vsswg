@@ -1,1 +1,5 @@
+# Local configuration file
 config.ini
+
+# Ghostwriter MarkDown backup files
+*.md.backup
