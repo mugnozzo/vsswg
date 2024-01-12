@@ -19,10 +19,10 @@ def replace_blocks(original_file, blocks_dir):
     page_vars = {}
 
     # Find all variable placeholders and store them in page_vars
-    var_regexp = r'\{\{\s*var\s+(\w+)\s*=\s*([-\w]+)\s*\}\}'
+    var_regexp = r'\{\{\s*var\s+(\w+)\s*=\s*([-\w ]+)\s*\}\}'
     for var_match in re.finditer(var_regexp, content):
         var_name = var_match.group(1)
-        var_value = var_match.group(2)
+        var_value = var_match.group(2).strip()
         page_vars[var_name] = var_value
     content = re.sub(var_regexp, "", content)
     print(page_vars)
